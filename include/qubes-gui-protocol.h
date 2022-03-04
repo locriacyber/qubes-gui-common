@@ -99,6 +99,7 @@ enum {
     MSG_WMCLASS,
     MSG_WINDOW_DUMP,
     MSG_CURSOR,
+    MSG_XINPUT,
     MSG_MAX
 };
 /* VM -> Dom0, Dom0 -> VM */
@@ -244,6 +245,20 @@ struct msg_window_dump_hdr {
 struct msg_cursor {
     uint32_t cursor;
 };
+
+#include <X11/extensions/XInput2.h>
+
+/* Dom0 -> VM
+hardware input events filtered by dom0, assumed to be safe to directly feed to other VMs
+
+Replace the following base X event types:
+
+- key/rawkey*
+- button/rawbutton*
+- motion/rawmotion*
+- focus
+*/
+typedef XIDeviceEvent msg_xinput;
 
 enum {
     WINDOW_DUMP_TYPE_GRANT_REFS
